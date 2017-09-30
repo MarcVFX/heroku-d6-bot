@@ -386,4 +386,4 @@ var c = schedule.scheduleJob('30 * * * *', function(){
 });
 */
 
-bot.login(TOKEN);
+bot.login(process.env.BOT_TOKEN);
