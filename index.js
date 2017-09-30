@@ -20,8 +20,9 @@ var year = date.getUTCFullYear()
 
 
 /* EMBED VARIABLES */
-const hexColor = "2EA319"
-const guildIconURL = "https://cdn.discordapp.com/icons/346767747226664971/beaf3e96dc6fe20fc00f76c212a6c116.webp"
+const hexColor = "2EA319";
+const admHexColor = "#c10d0d";
+const guildIconURL = "https://cdn.discordapp.com/icons/346767747226664971/beaf3e96dc6fe20fc00f76c212a6c116.webp";
 
 /*  FILES */
 
@@ -163,7 +164,7 @@ bot.on("message", function(message){
             if (message.member.roles.has(D6RoleID)){
                 rosterData[args[1]].push(args[2])
                 saveRosterJSON()
-                message.reply("Sucessfully added " + args[2] + " to the roster")
+                message.reply("Sucessfully added " + "`" + args[2] + "`" + " to the roster")
             }
             else {
                 message.reply("You must be on the management role to do that bro :v")
@@ -176,7 +177,7 @@ bot.on("message", function(message){
                 let index = rosterData[args[1]].indexOf(args[2])
                 rosterData[args[1]].splice(index, 1)
                 saveRosterJSON()
-                message.reply("Sucessfully removed " + args[2] + " from the roster")
+                message.reply("Sucessfully removed " + "`" + args[2]+ "`" + " from the roster")
             }
             else {
                 message.reply("You must be on the management role to do that bro :v")
@@ -219,7 +220,6 @@ bot.on("message", function(message){
                 .addField(prefix + "roster",  "Show up the entire roster of D6")
                 .addField(prefix + "info", "Show up the bot info")
                 .addField(prefix + "files", "Link all files that you will need")
-                .addField(prefix + "changelog", "The lastest changes on the bot code")
                 .addField(prefix + "adm", "Show up all managements commands (only for members on D6 - Management role)")
                 .setColor(hexColor)
                 .setThumbnail(guildIconURL)
@@ -234,8 +234,8 @@ bot.on("message", function(message){
                 .addField(prefix + "add [role] [name]", "Adds an member to the roster list.")
                 .addField(prefix + "remove [role] name]", "Removes an member from the roster list.")
                 .addField(prefix + "update", "Updates the roster list")
-                .addField(prefix + "changelog add [version] [description]", "The lastest changes on the bot code")
-                .setColor("#c10d0d")
+                .addField(prefix + "phrases", "Show up all bot error messages")
+                .setColor(admHexColor)
                 .setThumbnail(guildIconURL)
             if (message.member.roles.has(D6RoleID)) message.channel.sendEmbed(adm);
             else message.reply("You can't do that")
@@ -281,9 +281,13 @@ bot.on("message", function(message){
                     message.channel.send("You must put an link") 
                     return;
                 }
+                else if ("logo" + othersData.links[args[1]]){
+                    message.channel.send("This file don't exist")
+                    return;
+                }
                 else {
-                    othersData.links[args[1]] = args[2]
-                    message.channel.send("`" + args[2] + "`" + " added to " + args[1])
+                    othersData.links["logo" + args[1]] = args[2]
+                    message.channel.send("logo" + args[1] + " changed to " + "`" + args[2] + "`")
                     saveOthersJSON()
                 }
 
@@ -338,9 +342,9 @@ bot.on("message", function(message){
             }
             function channelCheck(){
                 var toSendMsg = " ";
-                    for (var i = 0; i < guildChannels.length; i++){
-                        if (guildChannels[i] == args[1]){
-                            var toSendCnl= bot.channels.find("name", guildChannels[i]);
+                    for (var i = 0; i < othersData.channels.length; i++){
+                        if (othersData.channels[i] == args[1]){
+                            var toSendCnl= bot.channels.find("name", othersData.channels[i]);
                                 for (var i = 2; i < args.length; i++){
                                     var toSendMsg = toSendMsg + args[i] + " ";
                                 }
@@ -354,13 +358,63 @@ bot.on("message", function(message){
                                     return
                                 }
                         }
-                        else if (guildChannels.length - 1 == i){
+                        else if (othersData.channels.length - 1 == i){
                             message.reply("This channel don't exists or I can't send an message to this channel");
                             return
                         }
                     }
                 }
             break;
+
+            case "phrases":
+                var D6RoleID = message.guild.roles.find('name', 'D6 - Management').id
+                if (message.member.roles.has(D6RoleID)){
+                    message.channel.send("These are my error messages")
+                    for (var i = 0; i < othersData.phrases.length; i ++){
+                        message.channel.send("`" + othersData.phrases[i] + "`")
+                    }
+                }
+                else {
+                    message.reply("You must be on the management role to do that bro :v")
+                }
+                break;
+
+            case "addchannel":
+                if (args[1] != undefined){
+                    othersData.channels.push(args[1])
+                    message.channel.send("`" + args[1] + "`" + " added to channels list")
+                    saveOthersJSON()
+                    return;
+                }
+                else{
+                    message.channel.send("You must need to put the channel name")
+                    return;
+                }
+                break;
+            case "removechannel":
+                if (args[1] != undefined){
+                    var index = othersData.channels.indexOf(args[1])
+                    othersData.channels.splice(index, 1)
+                    message.channel.send("`" + args[1] + "`" + " removed from channels list")
+                    saveOthersJSON()
+                }
+                else {
+                    message.channel.send("You must need to put the channel name")
+                    return;
+                }
+                break;
+            case "channels":
+                var D6RoleID = message.guild.roles.find('name', 'D6 - Management').id
+                if (message.member.roles.has(D6RoleID)){
+                    message.channel.send("These are the channels that I can send messages")
+                    for (var i = 0; i < othersData.channels.length; i++){
+                        message.channel.send("`" + othersData.channels[i] + "`")
+                    }
+                }
+                else {
+                    message.reply("You must be on the management role to do that bro :v")
+                }
+                break;
 
         case "token":
             message.reply("ata bls");
