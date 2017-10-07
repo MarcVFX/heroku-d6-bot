@@ -80,15 +80,6 @@ function goodMorning(channel){
     var toSend = bot.channels.find("name", channel);
     toSend.send("Good morning, team!");
 };
-function queue(channel){
-    var toSend = bot.channels.find("name", channel)
-    toSend.send("Remember to send your uploads to our channel! It's EZ, just send it to " + bot.channels.find("name", "upload-queue") + " channel");
-};
-function useful(channel){
-    var toSend = bot.channels.find("name", channel);
-    toSend.send("I'm useful, want to see? Just type " + prefix + "help");
-};
-
 /* Commands here \/ */
 bot.on('ready', function(){
     bot.user.setPresence({ game: { name: "d!help", type: 0 } });
