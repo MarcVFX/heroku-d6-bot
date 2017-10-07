@@ -437,14 +437,14 @@ bot.on("message", function(message){
 /* SCHEDULED MESSAGE */
 var a = schedule.scheduleJob('00 20 * * *', function(){
     reminder("general");
-    queue("general");
+    console.log("ata")
 });
 var b = schedule.scheduleJob('00 7 * * *', function(){
     goodMorning("general");
-    queue("general");
+    console.log("ata")
 });
 var c = schedule.scheduleJob('00 15 * * *', function(){
-    queue("general");
+    console.log("ata")
 });
 /*
 var c = schedule.scheduleJob('30 * * * *', function(){
