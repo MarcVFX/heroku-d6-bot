@@ -453,4 +453,4 @@ var c = schedule.scheduleJob('30 * * * *', function(){
 });
 */
 
-bot.login(process.env.BOT_TOKEN);
+bot.login("MzUxNTEyMTQ3MDEzOTI2OTEz.DLv1GA.5Z70osmqK5wWcIOeAGOpq6g8RoM");
