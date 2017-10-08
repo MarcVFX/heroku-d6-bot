@@ -1,7 +1,6 @@
 /* BOT VARIABLES/CONSTANTS */
 const Discord = require("discord.js");
 const schedule = require('node-schedule');
-const latestvid = require('latestvid');
 const fs = require("fs");
 const TOKEN = "MzUxNTEyMTQ3MDEzOTI2OTEz.DIWmKg.xqMXl09glrvtziuHmnKeAx8PHW0";
 var prefix = "d!";
