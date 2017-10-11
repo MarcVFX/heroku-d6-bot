@@ -273,6 +273,7 @@ bot.on("message", function(message){
                 .addField(config.prefix + "phrases", "Show up all bot error messages")
                 .addField(config.prefix + "addphrase [phrase]", "Adds an phrase to bot")
                 .addField(config.prefix + "updatelink [file] [new link]", "Change the link of an file")
+                .addField(config.prefix + "files [add/remove] [type] [typeName] [url]", "Adds or remove files from files list")
                 .setColor(admHexColor)
                 .setThumbnail(guildIconURL)
             if (message.member.roles.has(D6RoleID)) message.channel.sendEmbed(adm);
@@ -286,7 +287,7 @@ bot.on("message", function(message){
                 .setTitle("Please, select one of files below")
                 .setDescription("Or you can use " + config.prefix + "all to get all files")
                     for (var i = 0; i < othersData.linksNames.length; i++){
-                        files.addField(othersData.linksTypes[i] + " file", config.prefix + othersData.linksTypes[i]);
+                        files.addField(othersData.linksTypes[i].toUpperCase() + " file", config.prefix + "files " + othersData.linksTypes[i]);
                     }
                 files.setColor(hexColor)
                 files.setThumbnail(guildIconURL)
