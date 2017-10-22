@@ -48,6 +48,7 @@ function saveIDS(){
     });
 }
 
+
 /* ===================================
             ROSTER - LINE
    =================================== */    
@@ -103,9 +104,9 @@ function goodMorning(channel){
 
 
 
-/* ===================================
+/* =========================================================================================================
             NEW - MEMBER
-   =================================== */    
+   ========================================================================================================= */    
 bot.on("guildMemberAdd", (member) => {
     var toSend = bot.channels.find("name", "general");
     var newMember = new Discord.RichEmbed()
@@ -130,19 +131,32 @@ bot.on("guildMemberAdd", (member) => {
 
 
 
-/* ===================================
+/* =========================================================================================================
             BOT - READY
-   =================================== */    
+   ========================================================================================================= */    
 bot.on('ready', function(){
     bot.user.setPresence({ game: { name: "d!help", type: 0 } });
     console.log("ready and running");
 });
 bot.on("message", function(message){
 
-
-if(message.channel.type == Discord.DMChannel){
-    bot.fetchUser(ids["District Marc "]).then(user => {user.send("`" + message.author.username + "`" + " " + "`" + "sent to me:" + "` " + message)})
-    
+/* ===================================
+            DM MESSAGE - TO MARC
+   =================================== */ 
+   var lastAuthorId = ""
+if(message.channel.type == "dm"){
+    if(message.author.id == ids["D6 Bot "]) return;
+    bot.fetchUser(ids["District Marc "]).then(user => {user.send("`" + message.author.username + "`" + " " + "`" + "sent to me:" + "` " + message)})   
+    if (message.content.includes(config.prefix)){
+        console.log("ata")
+    }
+    else{
+    var nickToId = message.author.username + " "
+    lastAuthorId = ids[nickToId]
+    console.log(lastAuthorId)
+    console.log(ids[message.author.username + " "])
+    console.log(nickToId)
+    }
 }
 
 
@@ -170,7 +184,7 @@ if (!ids[message.author.username + " "]){
     }
 
 /* ===================================
-            NOT LINK - ON UPLOAD-QUEUE
+            NO LINK - ON UPLOAD-QUEUE
    =================================== */    
     if(!message.content.includes('http') && message.channel == bot.channels.find("name", "upload-queue")){
         message.delete();
@@ -180,7 +194,9 @@ if (!ids[message.author.username + " "]){
 
 
 
-
+/* =========================================================================================================
+            SWITCH - RETURNERS
+   ========================================================================================================= */ 
     if(message.author.equals(bot.user)) return;
 
     if (!message.content.startsWith(config.prefix)) return;
@@ -237,6 +253,7 @@ if (!ids[message.author.username + " "]){
             ROSTER - EMBED
    =================================== */    
         case "roster":
+            /* ADD */
             if (args[1] == "add"){
                 if (hasRole()){
                     rosterData[args[1]].push(args[2])
@@ -244,6 +261,8 @@ if (!ids[message.author.username + " "]){
                     message.reply("Sucessfully added " + "`" + args[2] + "`" + " to the roster")
                 }
             }
+
+            /* REMOVE */
             else if (args[1] == "remove"){
                 if (hasRole()){
                     let index = rosterData[args[1]].indexOf(args[2])
@@ -252,6 +271,8 @@ if (!ids[message.author.username + " "]){
                     message.reply("Sucessfully removed " + "`" + args[2]+ "`" + " from the roster")
                 }
             }
+
+            /* UPDATE */
             else if (args[1] == "update"){
                 if (hasRole()) saveRosterJSON()
             }
@@ -578,6 +599,26 @@ if (!ids[message.author.username + " "]){
                 var id = ids[nickName]
                 bot.fetchUser(id)
                 .then(user => {user.send("`" + message.author.username + "`" + " " + "`" + "sent to you:" + "`" + " " + messageToSend)})
+            }
+            break;
+
+/* ===================================
+            ANSWER - MESSAGE
+   =================================== */
+        case "answer":
+            if (message.author.id == ids[nickToId]){
+                message.channel.send("You can't answer yourself")
+            }
+            else{
+                messageToSend = " "
+                for (var i = 1; i < args.length; i++){
+                    messageToSend = messageToSend + args[i] + " "
+                }
+                console.log(lastAuthorId)
+                console.log(messageToSend)
+                bot.fetchUser(ids[nickToId])
+                .then(user => {user.send(messageToSend)})
+                message.channel.send("Message sent")
             }
             break;
 
